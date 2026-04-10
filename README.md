@@ -33,12 +33,12 @@ Commercial use requires explicit written permission from the author.
 ```
 s-i-x-voice-to-text/
 │
-├── s_i_x_vtt.py      # Core transcription engine (Faster-Whisper wrapper)
+├── voice.py          # Core transcription engine (Faster-Whisper wrapper)
 ├── server.py         # Flask API server — bridges the frontend and engine
 │
 ├── index.html        # Frontend — HTML structure
 ├── styles.css        # Frontend — all styling (CSS variables for easy theming)
-├── app.js            # Frontend — all JavaScript (Web Audio API, fetch, drag-drop)
+├── main.js           # Frontend — all JavaScript (Web Audio API, fetch, drag-drop)
 │
 └── README.md
 ```
@@ -73,8 +73,8 @@ No paid APIs, no external services, no subscriptions.
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/s-i-x-voice-to-text.git
-cd s-i-x-voice-to-text
+git clone https://github.com/Raushan-tryingtocode/Voice_to_Text_and_Lyrics
+cd voice
 ```
 
 **2. Install Python dependencies**
