@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Voice to Text</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <!-- ── Drag & drop overlay ───────────────────────────────────────────── -->
+    <div class="drop-overlay" id="dropOverlay">
+      <div class="drop-box">
+        <p>Drop audio file</p>
+        <p>wav · mp3 · ogg · m4a · flac</p>
+      </div>
+    </div>
+
+    <!-- ── Main layout wrapper ───────────────────────────────────────────── -->
+    <div class="wrap">
+
+      <!-- Header -->
+      <header>
+        <div class="logo">S.<span>I</span>.X</div>
+        <div class="tagline">Voice &amp; Lyrics Transcription Engine</div>
+      </header>
+
+      <!-- ── Input card ──────────────────────────────────────────────────── -->
+      <div class="card">
+
+        <!-- Mode toggle: Speech / Lyrics -->
+        <div class="mode-row">
+          Mode
+          <div class="toggle-pill">
+            <button class="active" id="btnSpeech"
+              onclick="setMode('speech')">Speech</button>
+            <button id="btnSong" onclick="setMode('song')">Lyrics</button>
+          </div>
+        </div>
+
+        <!-- Live waveform canvas -->
+        <div class="waveform-area">
+          <canvas id="waveCanvas"></canvas>
+          <div class="idle-label" id="idleLabel">Waveform</div>
+        </div>
+
+        <!-- Record / Upload controls -->
+        <div class="controls">
+          <button class="btn-record" id="btnRecord" onclick="toggleRecord()">
+            <span class="dot"></span>
+            <span id="recordLabel">Record</span>
+          </button>
+          <button class="btn-upload"
+            onclick="document.getElementById('fileInput').click()">
+            ↑ Upload file
+          </button>
+          <input type="file" id="fileInput" accept="audio/*"
+            onchange="handleFile(this.files[0])" />
+          <div class="timer" id="timer"></div>
+        </div>
+
+        <!-- Status indicator -->
+        <div class="status" id="status">
+          <div class="status-dot"></div>
+          <span id="statusText">Ready</span>
+        </div>
+
+      </div><!-- /.card -->
+
+      <!-- ── Output card ─────────────────────────────────────────────────── -->
+      <div class="output-card" id="outputCard">
+
+        <div class="output-header">
+          <span class="output-label" id="outputLabel">Transcription</span>
+          <div class="output-meta">
+            <span class="lang-badge" id="langBadge"></span>
+            <button class="btn-copy" id="btnCopy"
+              onclick="copyText()">Copy</button>
+          </div>
+        </div>
+
+        <div class="output-body">
+          <!-- Speech result (uses display font for readability) -->
+          <p id="outputText"></p>
+          <!-- Lyrics result (uses monospace + verse formatting) -->
+          <pre id="outputLyrics" style="display:none"></pre>
+        </div>
+
+      </div><!-- /.output-card -->
+
+    </div><!-- /.wrap -->
+
+    <footer>Powered by Faster-Whisper · Made By Batch-15 · CSM-B II-year
+    </footer>
+
+    <!-- Script (loaded at end of body so DOM is ready) -->
+    <script src="main.js"></script>
+
+  </body>
+</html>

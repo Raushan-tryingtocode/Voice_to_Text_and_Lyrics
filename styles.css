@@ -1,0 +1,562 @@
+/* ============================================================
+   S.I.X — Voice to Text  |  styles.css
+   ============================================================
+   Sections (Ctrl+F to jump):
+     1. CSS Variables (theme tokens)
+     2. Reset & Base
+     3. Background Effects
+     4. Layout
+     5. Header
+     6. Card
+     7. Mode Toggle
+     8. Waveform Area
+     9. Controls (Record / Upload / Timer)
+    10. Status Indicator
+    11. Output Card
+    12. Drop Overlay
+    13. Footer
+    14. Animations
+   ============================================================ */
+
+
+/* ── 1. CSS Variables ─────────────────────────────────────────
+   Edit these to retheme the entire UI in one place.
+   ─────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg:        #0c0c0f;   /* page background          */
+  --surface:   #13131a;   /* card background           */
+  --surface2:  #1c1c26;   /* inset / darker surfaces   */
+  --border:    #2a2a3a;   /* default border colour     */
+
+  /* Accent (electric lime) — change this to recolour CTAs */
+  --accent:      rgb(108, 233, 208);
+  --accent-dim:  rgba(108, 233, 208, 0.12);
+  --accent-glow: rgba(66, 161, 245, 0.25);
+
+  /* Text */
+  --text:   #e8e8f0;   /* primary text    */
+  --muted:  #7070a0;   /* secondary text  */
+
+  /* Semantic */
+  --danger: #fd3838;   /* recording / error state */
+
+  /* Typography */
+  --ff-display: 'Cormorant Garamond', Georgia, serif;
+  --ff-mono:    'Space Mono', monospace;
+
+  /* Misc */
+  --radius:     14px;
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ── 2. Reset & Base ──────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  background: var(--bg);
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--ff-mono);
+  color: var(--text);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 60px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+
+/* ── 3. Background Effects ────────────────────────────────────
+   Two pseudo-elements on <body>:
+     ::before  → subtle dot-grid
+     ::after   → top-centre radial glow orb
+   ─────────────────────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(200, 245, 66, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 245, 66, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;  /* grid cell size — increase for wider grid */
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -20vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(
+    ellipse,
+    rgba(200, 245, 66, 0.07) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* ── 4. Layout ────────────────────────────────────────────── */
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 740px;   /* increase for wider layout */
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+
+/* ── 5. Header ────────────────────────────────────────────── */
+header {
+  text-align: center;
+  padding-bottom: 8px;
+}
+
+.logo {
+  font-family: var(--ff-display);
+  font-size: clamp(2.4rem, 6vw, 3.8rem);   /* responsive font size */
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--text);
+}
+
+/* The accented letter in the logo */
+.logo span {
+  color: var(--accent);
+}
+
+.tagline {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+
+/* ── 6. Card ──────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: border-color var(--transition);
+}
+
+/* Highlight border when any child has focus */
+.card:focus-within {
+  border-color: rgba(200, 245, 66, 0.3);
+}
+
+
+/* ── 7. Mode Toggle ───────────────────────────────────────── */
+.mode-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.toggle-pill {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.toggle-pill button {
+  padding: 6px 18px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+/* Active pill state */
+.toggle-pill button.active {
+  background: var(--accent);
+  color: #0c0c0f;       /* dark text on bright accent */
+  font-weight: 700;
+}
+
+
+/* ── 8. Waveform Area ─────────────────────────────────────── */
+.waveform-area {
+  position: relative;
+  height: 96px;         /* increase for a taller waveform */
+  background: var(--surface2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+/* Canvas fills the full area; JS handles DPI scaling */
+#waveCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Placeholder text shown when not recording */
+.idle-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+
+/* ── 9. Controls ──────────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* ── Record button ── */
+.btn-record {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--accent-dim);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-record:hover {
+  background: rgba(200, 245, 66, 0.2);
+}
+
+/* Active recording state */
+.btn-record.recording {
+  background: rgba(255, 107, 107, 0.12);
+  border-color: var(--danger);
+  color: var(--danger);
+  animation: pulse-btn 1.4s ease-in-out infinite;
+}
+
+/* The coloured circle inside the record button */
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Blink the dot when recording */
+.btn-record.recording .dot {
+  animation: blink 0.7s step-start infinite;
+}
+
+/* ── Upload button ── */
+.btn-upload {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-family: var(--ff-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.btn-upload:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Hidden native file input — triggered by the upload button */
+#fileInput {
+  display: none;
+}
+
+/* ── Recording timer ── */
+.timer {
+  margin-left: auto;    /* push to right side of flex row */
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;   /* fixed-width digits so it doesn't jump */
+  min-width: 44px;
+  text-align: right;
+}
+
+.timer.active {
+  color: var(--danger);
+}
+
+
+/* ── 10. Status Indicator ─────────────────────────────────── */
+.status {
+  min-height: 22px;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+
+/* State variants — toggled by JS via className */
+.status.processing .status-dot {
+  background: var(--accent);
+  animation: blink 0.8s step-start infinite;
+}
+
+.status.done .status-dot {
+  background: var(--accent);
+  animation: none;
+}
+
+.status.error .status-dot {
+  background: var(--danger);
+  animation: none;
+}
+
+
+/* ── 11. Output Card ──────────────────────────────────────── */
+.output-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: none;   /* hidden until JS adds .visible */
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.output-card.visible {
+  display: block;
+}
+
+/* Top bar of the output card */
+.output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.output-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.output-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Language + confidence pill */
+.lang-badge {
+  padding: 3px 10px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(200, 245, 66, 0.25);
+  color: var(--accent);
+  border-radius: 100px;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Copy to clipboard button */
+.btn-copy {
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all var(--transition);
+}
+
+.btn-copy:hover,
+.btn-copy.copied {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Result text area */
+.output-body {
+  padding: 24px 28px;
+}
+
+/* Speech transcription — large, readable serif */
+#outputText {
+  font-family: var(--ff-display);
+  font-size: 1.45rem;    /* reduce if you want smaller output text */
+  line-height: 1.65;
+  color: var(--text);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Lyrics / song output — monospace with verse indentation */
+#outputLyrics {
+  font-family: var(--ff-mono);
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text);
+  white-space: pre-wrap;   /* preserve line breaks from the backend */
+}
+
+/* Each verse block gets a left border accent */
+#outputLyrics .verse {
+  border-left: 2px solid rgba(200, 245, 66, 0.35);
+  padding-left: 16px;
+  margin-bottom: 22px;
+  display: block;
+}
+
+
+/* ── 12. Drop Overlay ─────────────────────────────────────── */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(12, 12, 15, 0.88);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.drop-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.drop-box {
+  border: 2px dashed var(--accent);
+  border-radius: 20px;
+  padding: 60px 80px;
+  text-align: center;
+  color: var(--accent);
+}
+
+.drop-box p:first-child {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.drop-box p:last-child {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+
+/* ── 13. Footer ───────────────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--border);
+  text-align: center;
+}
+
+
+/* ── 14. Animations ───────────────────────────────────────── */
+
+/* Output card entrance */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Record button pulse ring */
+@keyframes pulse-btn {
+  0%,
+  100% { box-shadow: 0 0 0 0   rgba(255, 107, 107, 0.3); }
+  50%  { box-shadow: 0 0 0 8px rgba(255, 107, 107, 0);   }
+}
+
+/* Generic blink — used on recording dot and status dot */
+@keyframes blink {
+  0%,
+  100% { opacity: 1; }
+  50%  { opacity: 0; }
+}
