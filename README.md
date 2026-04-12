@@ -1,6 +1,6 @@
-# S.I.X — Voice to Text
+# Voice to Text 
 
-> **Mini-Project** | B.Tech / BCA — Minor Project Submission
+> **Mini-Project** | B.Tech — Minor Project Submission
 
 A local, offline voice-to-text transcription tool built with Python and a browser-based frontend. Powered by [Faster-Whisper](https://github.com/SYSTRAN/faster-whisper), it supports **99 languages**, real-time waveform visualisation, and a dedicated **song/lyrics mode** that formats transcribed audio into neat verse-structured output. No API keys, no cloud services, no cost — everything runs on your own machine.
 
@@ -31,7 +31,7 @@ Commercial use requires explicit written permission from the author.
 ## Project Structure
 
 ```
-s-i-x-voice-to-text/
+voice-to-text/
 │
 ├── voice.py          # Core transcription engine (Faster-Whisper wrapper)
 ├── server.py         # Flask API server — bridges the frontend and engine
