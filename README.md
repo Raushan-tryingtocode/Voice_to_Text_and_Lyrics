@@ -112,16 +112,16 @@ Navigate to `http://127.0.0.1:5000` in your browser.
 
 ```bash
 # Interactive menu
-python s_i_x_vtt.py
+python voice.py
 
 # Transcribe a file directly
-python s_i_x_vtt.py audio.mp3
+python voice.py audio.mp3
 
 # Transcribe a song/audio file in lyrics mode
-python s_i_x_vtt.py audio.mp3 --song
+python voice.py audio.mp3 --song
 
 # Use a specific model
-python s_i_x_vtt.py audio.mp3 large-v3
+python voice.py audio.mp3 large-v3
 ```
 
 ---
