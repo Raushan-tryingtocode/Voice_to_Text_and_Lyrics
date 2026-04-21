@@ -1,3 +1,5 @@
+Note: this was made for a college project. It is under development and will be deployed in the future.
+
 # Voice to Text 
 
 > **Mini-Project** | B.Tech — Minor Project Submission
