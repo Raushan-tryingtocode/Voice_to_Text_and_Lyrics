@@ -1,0 +1,6 @@
+faster-whisper
+sounddevice
+scipy
+numpy
+flask
+flask-cors
